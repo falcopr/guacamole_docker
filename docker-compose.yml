@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+    guacamole:
+        image: guacamole/guacamole:latest
+        logging:
+            driver: json-file
+        environment: 
+            - POSTGRES_PASSWORD
+            - POSTGRES_USER
+            - POSTGRES_DB
+        depends_on: 
+            - postgres
+            - guacd
+        networks:
+            - back
+    guacd:
+        image: guacamole/guacd:latest
+        logging:
+            driver: json-file
+        networks:
+            - back
+    reverse_proxy:
+        image: nginx:1.13-alpine
+        volumes:
+            - ./reverseproxy/config:/etc/nginx:rw
+            - ./reverseproxy/ssl:/etc/ssl
+        ports:
+            - "443:443"
+        depends_on:
+            - guacamole
+        networks:
+            - back
+            - front
+    postgres:
+        image: postgres:10-alpine
+        logging:
+            driver: json-file
+        environment: 
+            - POSTGRES_PASSWORD
+            - POSTGRES_USER
+            - POSTGRES_DB
+        networks:
+            - back
+        volume:
+            - guacamole_db:/var/lib/postgresql/data
+
+networks:
+    front:
+        driver: bridge
+    back:
+        driver: bridge
+    
+volumes:
+    guacamole_db:
