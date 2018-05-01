@@ -7,6 +7,7 @@ docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --postgres > in
 ``
 
 # Links
-* https://hub.docker.com/r/guacamole/guacamole/
-* https://hub.docker.com/r/library/nginx/
-* https://hub.docker.com/r/guacamole/guacd/
+* [Guacamole Proxy](https://guacamole.apache.org/doc/gug/proxying-guacamole.html)
+* [Guacamole Docker](https://hub.docker.com/r/guacamole/guacamole/)
+* [Nginx Docker](https://hub.docker.com/r/library/nginx/)
+* [Guacd Docker](https://hub.docker.com/r/guacamole/guacd/)

@@ -3,6 +3,7 @@ version: '3'
 services:
     guacamole:
         image: guacamole/guacamole:latest
+        restart: always
         logging:
             driver: json-file
         environment: 
@@ -13,15 +14,21 @@ services:
             - postgres
             - guacd
         networks:
-            - back
+            back: 
+                aliases:
+                    - guacamole
     guacd:
         image: guacamole/guacd:latest
+        restart: always
         logging:
             driver: json-file
         networks:
-            - back
+            back: 
+                aliases:
+                    - guacd
     reverse_proxy:
         image: nginx:1.13-alpine
+        restart: always
         volumes:
             - ./reverseproxy/config:/etc/nginx:rw
             - ./reverseproxy/ssl:/etc/ssl
@@ -34,6 +41,7 @@ services:
             - front
     postgres:
         image: postgres:10-alpine
+        restart: always
         logging:
             driver: json-file
         environment: 
@@ -41,9 +49,12 @@ services:
             - POSTGRES_USER
             - POSTGRES_DB
         networks:
-            - back
-        volume:
+            back: 
+                aliases:
+                    - postgres
+        volumes:
             - guacamole_db:/var/lib/postgresql/data
+            
 
 networks:
     front:
