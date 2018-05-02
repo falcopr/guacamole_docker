@@ -19,7 +19,7 @@ docker volume create --name guacamole_guacamole_db
 
 # Initialize database
 ``
-docker run --rm -it --env-file ./.env -v guacamole_db_guacamole_db:/var/lib/postgresql/data:rw postgres:10-alpine
+docker run --rm -it --env-file ./.env -v guacamole_guacamole_db:/var/lib/postgresql/data:rw postgres:10-alpine
 ``
 
 # Modify database
@@ -28,9 +28,25 @@ docker run --rm -it --user postgres:postgres --env-file ./.env -v /e/Projekte/gu
 ``
 OR
 ``
-docker create -it --name postgres_modification -v guacamole_db_guacamole_db:/var/lib/postgresql/data:rw --user postgres:postgres --env-file ./.env postgres:10-alpine /bin/sh
+docker run -d --name postgres -v guacamole_guacamole_db:/var/lib/postgresql/data:rw --user postgres:postgres --env-file ./.env postgres:10-alpine
+docker cp ./postgres/initdb.sql postgres:/initdb.sql
+docker exec -it --user postgres:postgres postgres /bin/sh
+``
+OR
+``
+docker create -it --name postgres_modification -v guacamole_guacamole_db:/var/lib/postgresql/data:rw --user postgres:postgres --env-file ./.env postgres:10-alpine /bin/sh
 docker cp ./postgres/initdb.sql postgres_modification:/initdb.sql
-docker start -i -a postgres_modificationdocker
+docker start -i -a postgres_modification
+``
+
+# Change encoding
+``
+iconv -f UTF-16LE -t UTF-8 initdb.sql > /tmp/initdb_utf8.sql
+``
+
+# Run SQL script file
+``
+psql -d $POSTGRES_DB -a -f /tmp/initdb_utf8.sql
 ``
 
 # Create a test container including it into a container
