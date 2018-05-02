@@ -53,16 +53,21 @@ psql -d $POSTGRES_DB -a -f /tmp/initdb_utf8.sql
 ``
 docker volume create guacamole_nginx_certs
 docker volume create guacamole_nginx_config
-docker run -d --name="mydebian" -v guacamole_nginx_certs:/nginx_certs:rw -v guacamole_nginx_config:/nginx_config:rw debian:latest /bin/bash
+docker create -it --name="mydebian" -v guacamole_nginx_certs:/nginx_certs:rw -v guacamole_nginx_config:/nginx_config:rw debian:latest /bin/bash
 docker cp ./reverseproxy/config/. mydebian:/nginx_certs
 docker cp ./reverseproxy/ssl/. mydebian:/nginx_config
-docker exec -it mydebian /bin/bash
+docker start -a -i mydebian
 ``
 
 # Create a test container including it into a container
 ``
 docker run -it --rm --network="guacamole_back" --name="mydebian" debian:latest /bin/bash
 ``
+
+# Reach guacamole:
+* https://{HOST_IP}/guacamole/guacamole/#/
+* TODO: Better URL routing
+* Default user & pass: guacadmin
 
 # Links
 * [Guacamole Proxy](https://guacamole.apache.org/doc/gug/proxying-guacamole.html)
