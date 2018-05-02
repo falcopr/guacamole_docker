@@ -1,3 +1,5 @@
 reverseproxy/config/access.log
 reverseproxy/config/error.log
+reverseproxy/config/global.pass
 reverseproxy/ssl
+postgres/initdb.sql
