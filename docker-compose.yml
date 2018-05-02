@@ -30,10 +30,8 @@ services:
         image: nginx:1.13-alpine
         restart: always
         volumes:
-            # - ./reverseproxy/config:/etc/nginx:rw
-            # - ./reverseproxy/ssl:/etc/ssl
-            - /e/Projekte/guacamole_docker/reverseproxy/config:/etc/nginx:rw
-            - /e/Projekte/guacamole_docker/reverseproxy/ssl:/etc/ssl
+            - nginx_certs:/etc/nginx:rw
+            - nginx_config:/etc/ssl
         ports:
             - "443:443"
         depends_on:
@@ -63,5 +61,5 @@ networks:
     
 volumes:
     guacamole_db:
-    # nginx_certs:
-    # nginx_config:
+    nginx_certs:
+    nginx_config:

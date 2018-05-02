@@ -49,6 +49,16 @@ iconv -f UTF-16LE -t UTF-8 initdb.sql > /tmp/initdb_utf8.sql
 psql -d $POSTGRES_DB -a -f /tmp/initdb_utf8.sql
 ``
 
+# Copy certificates and keys
+``
+docker volume create guacamole_nginx_certs
+docker volume create guacamole_nginx_config
+docker run -d --name="mydebian" -v guacamole_nginx_certs:/nginx_certs:rw -v guacamole_nginx_config:/nginx_config:rw debian:latest /bin/bash
+docker cp ./reverseproxy/config/. mydebian:/nginx_certs
+docker cp ./reverseproxy/ssl/. mydebian:/nginx_config
+docker exec -it mydebian /bin/bash
+``
+
 # Create a test container including it into a container
 ``
 docker run -it --rm --network="guacamole_back" --name="mydebian" debian:latest /bin/bash
